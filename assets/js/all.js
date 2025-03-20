@@ -19,7 +19,7 @@ const educationList = () => {
                 return count;
             }, {}); // 初期値は空のオブジェクト
 
-            // 2. 結果を呼び出す
+            // 2. オブジェクト形式として結果を呼び出す
             console.log(educationCount);
 
         } catch (error) { // エラー発生時の処理
