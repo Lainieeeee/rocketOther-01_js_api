@@ -70,6 +70,41 @@ areaList();
 // ==================================================
 // 題目三：26~30 年齡族群的平均薪水滿意度為？
 // ==================================================
+let salarySatisfaction = () => {
+    async function fetchData() {
+        try {
+            let response = await fetch(api); // APIを呼び出す
+            let jsonData = await response.json(); // JSON 形式のデータに変換する
+
+            // 1. 26~30歳の人数をフィルタリング
+            const ageGroup = jsonData.filter((item) => {
+                return item.age === "26~30 歲";
+            });
+
+            // 2. 26~30歳の満足度合計を算出
+            const totalSalaryScore = ageGroup.reduce((count, item) => {
+                return count + parseInt(item.company.salary_score);
+            }, 0);
+
+            // 3. 平均を計算
+            const averageSalaryScore = totalSalaryScore / ageGroup.length;
+            
+            // 4. 結果を小数点2桁にフォーマット
+            // 少数点1以下の桁数を切り捨てる
+            const formattedSalaryScore = averageSalaryScore.toFixed(1);
+
+            // 5. 結果を文字列形式として呼び出す
+            // console.log('average: '+formattedSalaryScore);
+            // 5. 結果をオブジェクト形式として呼び出す
+            console.log({ average: formattedSalaryScore });
+
+        } catch (error) { // エラー発生時の処理
+            console.log(error);
+        }
+    }
+    fetchData();
+};
+salarySatisfaction();
 
 // ==================================================
 // 題目四：產業簽到區有寫與沒寫的人數比例為？
