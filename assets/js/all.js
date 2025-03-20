@@ -237,3 +237,42 @@ calculateIndustryData();
 // ==================================================
 // 題目七：各年資的實體與遠端工作，平均薪水滿意度為？
 // ==================================================
+const avgSatis = () => {
+    async function fetchData() {
+        try {
+            let response = await fetch(api); // APIを呼び出す
+            let jsonData = await response.json(); // JSON 形式のデータに変換する
+
+            // 1. データを年資と働き方ごとにグループ化
+            const groupedData = jsonData.reduce((count, { company: { job_tenure, work, salary_score } }) => {
+                const salary = isNaN(Number(salary_score)) ? 0 : Number(salary_score);
+                count[job_tenure] = count[job_tenure] || {};
+                count[job_tenure][work] = count[job_tenure][work] || [];
+                count[job_tenure][work].push(salary);
+                return count;
+            }, {});
+
+            // 2. 平均満足度を計算する関数
+            const avgSalarySatisfaction = (scores) => (scores.reduce((sum, score) => sum + score, 0) / scores.length).toFixed(1);
+
+            // 3. 結果を整形
+            const result = Object.keys(groupedData).map((jobTenure) => {
+                const workResults = Object.keys(groupedData[jobTenure]).reduce((workCount, workType) => {
+                    const scores = groupedData[jobTenure][workType];
+                    workCount[`${workType}的平均薪水滿意度`] = `${avgSalarySatisfaction(scores)}分`;
+                    return workCount;
+                }, {});
+
+                return { [`工作經驗${jobTenure}`]: workResults };
+            });
+
+            // 4. 結果を表示
+            console.log(result);
+
+        } catch (error) { // エラー発生時の処理
+            console.log(error);
+        }
+    };
+    fetchData();
+};
+avgSatis();
