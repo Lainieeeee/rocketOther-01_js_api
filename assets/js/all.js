@@ -68,7 +68,7 @@ areaPercentage();
 // ==================================================
 // 題目三：26~30 年齡族群的平均薪水滿意度為？
 // ==================================================
-let salarySatisfaction = () => {
+const salarySatisfaction = () => {
     async function fetchData() {
         try {
             let response = await fetch(api); // APIを呼び出す
@@ -107,7 +107,7 @@ salarySatisfaction();
 // ==================================================
 // 題目四：產業簽到區有寫與沒寫的人數比例為？
 // ==================================================
-let inzustory = () => {
+const inzustory = () => {
     async function fetchData() {
         try {
             let response = await fetch(api); // APIを呼び出す
@@ -146,7 +146,7 @@ inzustory();
 // ==================================================
 // 題目五：各產業的實體與遠端人數
 // ==================================================
-let industryWorkTypeCount = () => {
+const industryWorkTypeCount = () => {
     async function fetchData() {
         try {
             let response = await fetch(api); // APIを呼び出す
