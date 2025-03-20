@@ -178,6 +178,61 @@ industryWorkTypeCount();
 // ==================================================
 // 題目六：各產業的男女性比例，與產業滿意度
 // ==================================================
+const calculateIndustryData = () => {
+    async function fetchData() {
+        try {
+            let response = await fetch(api); // APIを呼び出す
+            let jsonData = await response.json(); // JSON 形式のデータに変換する
+
+            // 1. 業界ごとのデータを格納するオブジェクトを初期化
+            const industryData = {};
+
+            // 2. データをループして、性別ごとに人数と満足度を集計
+            const updateIndustryData = (industry, gender, salary) => {
+                if (!industryData[industry]) {
+                    industryData[industry] = { 男性人数: 0, 女性人数: 0, 男性満足度合計: 0, 女性満足度合計: 0, 男性カウント: 0, 女性カウント: 0 };
+                }
+
+                const isMale = gender === "男性";
+                const isFemale = gender === "女性";
+                
+                if (isMale || isFemale) {
+                    // 性別に応じたデータをカウントと合計に加算
+                    const genderKey = isMale ? '男性' : '女性';
+                    industryData[industry][`${genderKey}人数`]++; // 性別ごとの人数をカウント
+                    industryData[industry][`${genderKey}満足度合計`] += salary; // 性別ごとの満足度合計を加算
+                    industryData[industry][`${genderKey}カウント`]++; // 性別ごとのデータ件数をカウント
+                }
+            };
+
+            // 3. jsonData配列をループして、各業界・性別・給与スコアを基にデータを更新
+            jsonData.forEach(({ company: { industry, salary_score }, gender }) => {
+                const salary = isNaN(Number(salary_score)) ? 0 : Number(salary_score);
+                updateIndustryData(industry, gender, salary); // アロー関数を使って関数呼び出し
+            });
+
+            // 4. 業界ごとに計算結果をまとめ、結果を整形
+            const result = Object.keys(industryData).reduce((count, industry) => {
+                const { 男性人数, 女性人数, 男性満足度合計, 女性満足度合計, 男性カウント, 女性カウント } = industryData[industry];
+                count[industry] = {
+                    "男性比例": 男性人数 ? `${((男性人数 / (男性人数 + 女性人数)) * 100).toFixed(0)}%` : "",
+                    "女性比例": 女性人数 ? `${((女性人数 / (男性人数 + 女性人数)) * 100).toFixed(0)}%` : "",
+                    "男性産業満足度": 男性カウント ? `${(男性満足度合計 / 男性カウント).toFixed(1)}分` : "",
+                    "女性産業満足度": 女性カウント ? `${(女性満足度合計 / 女性カウント).toFixed(1)}分` : ""
+                };
+                return count;
+            }, {});
+
+            // 5. 結果を呼び出す
+            console.log(result);
+            
+        } catch (error) { // エラー発生時の処理
+            console.log(error);
+        }
+    };
+    fetchData();
+};
+calculateIndustryData();
 
 // ==================================================
 // 題目七：各年資的實體與遠端工作，平均薪水滿意度為？
