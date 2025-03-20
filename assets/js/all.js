@@ -33,39 +33,37 @@ educationList();
 // ==================================================
 // 題目二： 各地區工作人士佔比人數
 // ==================================================
-const areaList = () => {
+const areaPercentage = () => {
     async function fetchData() {
         try {
             let response = await fetch(api); // APIを呼び出す
             let jsonData = await response.json(); // JSON 形式のデータに変換する
 
-            // 1. 合計エリアの数をカウント
-            let areaTotalCount = jsonData.length;
+            // 1. エリアの合計数を取得
+            const areaTotalCount = jsonData.length;
 
             // 2. 各エリアの出現回数をカウント
-            let areaCount = jsonData.reduce((count, item) => {
+            const areaCount = jsonData.reduce((count, item) => {
                 count[item.company.area] = (count[item.company.area] || 0) + 1;
                 return count;
             }, {});
 
-            // 3. 合計エリアから、各エリアの割合を算出
-            // 「Object.entries」はオブジェクトから配列に変換するために使用
-            // 「toFixed」は少数点以下の桁数を切り捨てる
-            let areaPercentage = Object.keys(areaCount).reduce((result, area) => {
-                result.push({ [area]: `${((areaCount[area] / areaTotalCount) * 100).toFixed(0)}%` });
-                return result;
-            }, []);
+            // 3. 各エリアの割合を計算して、配列オブジェクト形式に整形
+            // 小数点は切り捨て
+            const result = Object.keys(areaCount).map(area => ({
+                [area]: `${((areaCount[area] / areaTotalCount) * 100).toFixed(0)}%`
+            }));
 
-            // 4. 配列オブジェクト形式として結果を呼び出す
-            console.log(areaPercentage);
-
+            // 4. 結果を呼び出す
+            console.log(result);
+            
         } catch (error) { // エラー発生時の処理
-            console.error(error);
+            console.log(error);
         }
     }
     fetchData();
 };
-areaList();
+areaPercentage();
 
 // ==================================================
 // 題目三：26~30 年齡族群的平均薪水滿意度為？
