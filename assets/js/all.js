@@ -1,11 +1,33 @@
-// API URLは共通のためここで定義しておく
+// API URLは共通のため、ここで定義しておく
 // 定義共用的API
 const api = "https://raw.githubusercontent.com/hexschool/2021-ui-frontend-job/master/frontend_data.json";
+
 
 
 // ==================================================
 // 題目一：各學歷人數
 // ==================================================
+const educationList = () => {
+    async function fetchData() {
+        try {
+            let response = await fetch(api); // APIを呼び出す
+            let jsonData = await response.json(); // JSON 形式のデータに変換する
+
+            // 各學歴の人数を集計
+            let educationCount = jsonData.reduce((count, item) => {
+                count[item.education] = (count[item.education] || 0) + 1;
+                return count;
+            }, {}); // 初期値は空のオブジェクト
+
+            console.log(educationCount);
+
+        } catch (error) { // エラー発生時の処理
+            console.error(error);
+        }
+    }
+    fetchData();
+};
+educationList();
 
 // ==================================================
 // 題目二： 各地區工作人士佔比人數
