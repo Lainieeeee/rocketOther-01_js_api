@@ -32,6 +32,39 @@ educationList();
 // ==================================================
 // 題目二： 各地區工作人士佔比人數
 // ==================================================
+const areaList = () => {
+    async function fetchData() {
+        try {
+            let response = await fetch(api); // APIを呼び出す
+            let jsonData = await response.json(); // JSON 形式のデータに変換する
+
+            // 1. 合計エリアの数をカウント
+            let areaTotalCount = jsonData.length;
+
+            // 2. 各エリアの出現回数をカウント
+            let areaCount = jsonData.reduce((count, item) => {
+                count[item.company.area] = (count[item.company.area] || 0) + 1;
+                return count;
+            }, {});
+
+            // 3. 合計エリアから、各エリアの割合を算出
+            // 「Object.entries」はオブジェクトから配列に変換するために使用
+            // 「toFixed」は少数点以下の桁数を切り捨てる
+            let areaPercentage = Object.keys(areaCount).reduce((result, area) => {
+                result.push({ [area]: `${((areaCount[area] / areaTotalCount) * 100).toFixed(0)}%` });
+                return result;
+            }, []);
+
+            // 4. 結果を呼び出す
+            console.log(areaPercentage);
+
+        } catch (error) { // エラー発生時の処理
+            console.error(error);
+        }
+    }
+    fetchData();
+};
+areaList();
 
 // ==================================================
 // 題目三：26~30 年齡族群的平均薪水滿意度為？
