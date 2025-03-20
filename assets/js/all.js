@@ -56,7 +56,7 @@ const areaList = () => {
                 return result;
             }, []);
 
-            // 4. 結果を呼び出す
+            // 4. 配列オブジェクト形式として結果を呼び出す
             console.log(areaPercentage);
 
         } catch (error) { // エラー発生時の処理
