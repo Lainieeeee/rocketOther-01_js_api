@@ -107,6 +107,41 @@ salarySatisfaction();
 // ==================================================
 // 題目四：產業簽到區有寫與沒寫的人數比例為？
 // ==================================================
+let inzustory = () => {
+    async function fetchData() {
+        try {
+            let response = await fetch(api); // APIを呼び出す
+            let jsonData = await response.json(); // JSON 形式のデータに変換する
+
+            // 1. 產業簽到區の合計数を取得
+            const inzustoryCount = jsonData.length;
+
+            // 2. 產業簽到區が入力されているデータ数をカウント
+            const withMessageCount = jsonData.filter((item) => {
+                return item.company.industry_message.length > 0;
+            }).length;
+
+            // 3. 合計数から入力されているデータを引いて、入力されていないデータ数を算出
+            const withoutMessageCount = inzustoryCount - withMessageCount;
+
+            // 4. 結果をオブジェクト配列として一旦整形
+            const result = [
+                [`有寫${withMessageCount}人`, {
+                    no: `沒寫${withoutMessageCount}人`
+                }]
+            ];
+
+            // 5. 結果を呼び出す
+            console.log(result);
+
+            
+        } catch (error) { // エラー発生時の処理
+            console.log(error);
+        }
+    };
+    fetchData();
+};
+inzustory();
 
 // ==================================================
 // 題目五：各產業的實體與遠端人數
