@@ -146,6 +146,34 @@ inzustory();
 // ==================================================
 // 題目五：各產業的實體與遠端人數
 // ==================================================
+let industryWorkTypeCount = () => {
+    async function fetchData() {
+        try {
+            let response = await fetch(api); // APIを呼び出す
+            let jsonData = await response.json(); // JSON 形式のデータに変換する
+
+            // 1. 業界と職種をカウントする関数
+            const companyList = (count, industry, work) => {
+                count[industry] = count[industry] || {};  // 業界がすでに存在するか確認し、業界がなければプロパティを新規作成
+                count[industry][work] = (count[industry][work] || 0) + 1;  // 業界ごとに職種をカウント
+            };
+
+            // 2. 業界と職種のカウントを行う
+            const result = jsonData.reduce((count, item) => {
+                companyList(count, item.company.industry, item.company.work);
+                return count;
+            }, {});
+
+            // 3. 結果を呼び出す
+            console.log(result);
+            
+        } catch (error) { // エラー発生時の処理
+            console.log(error);
+        }
+    };
+    fetchData();
+};
+industryWorkTypeCount();
 
 // ==================================================
 // 題目六：各產業的男女性比例，與產業滿意度
