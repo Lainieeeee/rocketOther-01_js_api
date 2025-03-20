@@ -13,12 +13,13 @@ const educationList = () => {
             let response = await fetch(api); // APIを呼び出す
             let jsonData = await response.json(); // JSON 形式のデータに変換する
 
-            // 各學歴の人数を集計
+            // 1. 各學歴の人数を集計
             let educationCount = jsonData.reduce((count, item) => {
                 count[item.education] = (count[item.education] || 0) + 1;
                 return count;
             }, {}); // 初期値は空のオブジェクト
 
+            // 2. 結果を呼び出す
             console.log(educationCount);
 
         } catch (error) { // エラー発生時の処理
